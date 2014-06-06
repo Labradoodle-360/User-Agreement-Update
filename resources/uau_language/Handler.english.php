@@ -6,11 +6,11 @@
  * @author Labradoodle-360
  * @copyright Matthew Kerle 2012
  *
- * @version 1.0.3
+ * @version 1.0.4
  */
 
 $txt['uau_reg_mem'] = 'Regular Member';
-$txt['updated_agreement_notice'] = 'You are seeing this page because the Registration Agreement has been updated and you are being required to re-accept the agreement.';
+$txt['updated_agreement_notice'] = 'You are seeing this page because the registration agreement has been updated and you are being required to re-accept the agreement.';
 $txt['updated_user_agreement'] = 'Updated User Agreement';
 $txt['re_accept_agreement'] = 'Re-Accept Agreement';
 $txt['invalid_language_file'] = 'Sorry, no valid language files could not outputted.';
@@ -55,5 +55,5 @@ $txt['lab_plural_form'] = 's';
 $txt['lab_setting_bypass_members'] = 'Bypass Member(s)';
 $txt['lab_setting_desc_bypass_members'] = 'Members that do not have to re-accept the user agreement.';
 $txt['lab_save_settings'] = 'Save User Agreement Settings';
-$txt['lab_please_donate'] = 'Has User Agreement Update helped you? Please consider donating any amount to support the development. <a href="https://www.paypal.com/cgi-bin/webscr&cmd=_s-xclick&hosted_button_id=9a5t59m45tc88" target="_blank">Click here to donate via PayPal.</a>';
-$txt['lab_copyright'] = 'User Agreement Update 1.0.3<br /><a href="http://www.simplemachines.org/community/index.php?action=profile;u=182638" target="_blank">Copyright ' . date('Y') . ' - Matthew Kerle</a>';
+$txt['lab_please_donate'] = 'Has User Agreement Update helped you? Please consider donating any amount to support the development. <a href="https://www.paypal.com/cgi-bin/webscr&cmd=_s-xclick&hosted_button_id=9a5t59m45tc88">Click here to donate via PayPal.</a>';
+$txt['lab_copyright'] = '<a href="https://github.com/Labradoodle-360/User-Agreement-Update">User Agreement Update 1.0.4</a><br /><a href="http://www.simplemachines.org/community/index.php?action=profile;u=182638">Copyright 2011 - ' . date('Y') . ' Matthew Kerle</a>';

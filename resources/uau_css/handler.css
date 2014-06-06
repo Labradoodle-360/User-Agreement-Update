@@ -5,7 +5,7 @@
  * @author Labradoodle-360
  * @copyright 2011 Matthew Kerle - All Rights Reserved
  *
- * @version 1.0.3
+ * @version 1.0.4
  */
 
 .spacer {
@@ -49,6 +49,5 @@
 }
 .lab_icon_medium {
 	width: 24px;
-	margin-right: 4px;
-	margin-top: 2px;
+    margin: 2px 4px;
 }

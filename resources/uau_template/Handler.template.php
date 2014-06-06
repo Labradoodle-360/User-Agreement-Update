@@ -13,7 +13,7 @@ function template_main()
 {
 
 	// Our Global Variables.
-	global $context, $modSettings, $txt, $scripturl, $settings, $agreement, $user_info;
+	global $context, $txt, $scripturl, $settings, $agreement, $user_info;
 
 	// "Welcome" Them.
 	echo '
@@ -43,7 +43,7 @@ function template_main()
 
 	// It is time.
 	echo '
-		<div class="cat_bar" style="height: 28px;">
+		<div class="cat_bar" style="height: 31px;">
 			<h3 class="catbg">
 				<span class="floatleft lab_icon_medium">
 					<img src="', $settings['images_url'], '/uau_images/', $image_name, '.png" alt="" />
@@ -51,14 +51,14 @@ function template_main()
 				', $txt['lab_user_agreement'], '
 			</h3>
 		</div>
-		<div class="roundframe rfix">
+		<div class="roundframe" style="margin-top: -4px;">
 			<div class="inneframe">
 				<div class="content">
 					<div class="information">
 						', $agreement, '
 					</div>
 					<form action="', $scripturl, !empty($_REQUEST['action']) ? '?action=' . $_REQUEST['action'] : '', '" method="post">
-						<div id="which_input" class="centertext">
+						<div id="which_input" class="centertext hidden">
 							<label for="has_read">
 								<strong>', $txt['lab_i_have'], '</strong>
 							</label>
@@ -72,6 +72,11 @@ function template_main()
 								<strong>', $txt['the_user_agreement'], '</strong>
 							</label>
 						</div>
+						<noscript>
+							<div class="centertext">
+								<input type="submit" value="', $txt['re_accept_agreement'], '" id="submit" name="submit" class="button_submit bloated_input" />
+							</div>
+						</noscript>
 						<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 					</form>
 				</div>
@@ -89,7 +94,7 @@ function template_user_agreement_update()
 {
 
 	// Globalize all of our stuff.
-	global $context, $settings, $options, $scripturl, $txt, $modSettings, $membergroups, $exploded_membergroups;
+	global $context, $settings, $scripturl, $txt, $modSettings, $membergroups;
 
 	// Warning for if the file isn't writable.
 	if (!empty($context['warning']))
@@ -128,7 +133,9 @@ function template_user_agreement_update()
 								<select name="agree_lang" id="agree_lang" class="custom_select" onchange="document.getElementById(\'change_reg\').submit();">
 									<optgroup label="', $txt['lab_languages'], ':">';
 									foreach ($context['editable_agreements'] as $file => $name)
+									{
 										echo '<option value="', $file, '" ', $context['current_agreement'] == $file ? 'selected="selected"' : '', '>', $name, '</option>';
+									}
 									echo '</optgroup>
 								</select>
 							</div>
@@ -160,7 +167,7 @@ function template_user_agreement_update()
 			<div class="roundframe rfix">
 				<div class="inneframe">
 					<div class="content">
-						<div class="floatleft" id="left_column" style="width: 100%;">
+						<div class="floatleft" id="left_column" style="width: 100.7%;">
 							<div class="information">
 								<div class="floatleft" style="width: 112px; margin-top: 3px;">
 									<label for="agreementBBC">
@@ -181,7 +188,7 @@ function template_user_agreement_update()
 							</div>
 						</div>
 						<br class="clear" />
-						<textarea rows="20" name="agreement" id="agreement" style="width: 99%; margin-left: 1px; padding-top: 2px; padding-right: 5px; padding-left: 2px;">', isset($_POST['agreement']) ? $_POST['agreement'] : $context['agreement'], '</textarea>
+						<textarea rows="20" name="agreement" id="agreement" style="width: 99%; margin-left: 1px; padding: 10px;">', isset($_POST['agreement']) ? $_POST['agreement'] : $context['agreement'], '</textarea>
 						<div class="smalltext centertext">
 							', $txt['lab_restore_to'], ':&nbsp;
 							<span id="restore_latest_rev" class="fake_link">', $txt['lab_latest_revision'], '</span>
@@ -263,18 +270,18 @@ function template_user_agreement_update()
 									<div id="membergroups_group" class="hidden" style="margin-top: 15px;">
 										<div class="floatleft" style="width: 50%;" id="primary_mgroups">
 											<strong>', $txt['lab_primary'], '</strong>&nbsp;
-											(<span class="fake_link smalltext" id="primary_mgroups_check">', $txt['lab_check'], '</span>
+											(<a href="#" class="smalltext" id="primary_mgroups_check">', $txt['lab_check'], '</a>
 											&nbsp;/&nbsp;
-											<span class="fake_link smalltext" id="primary_mgroups_uncheck">', $txt['lab_uncheck'], '</span>)
+											<a href="#" class="smalltext" id="primary_mgroups_uncheck">', $txt['lab_uncheck'], '</a>)
 											<hr />';
 											foreach ($membergroups['primary'] as $act => $membergroup)
 											{
 												echo '
 													<div style="margin-bottom: -9px;">
 														<div class="floatleft" style="width: 6%;">
-															<input type="checkbox" value="', $act, '" class="input_check" id="', $act, '" name="agreementMembergroups[]" />
+															<input type="checkbox" value="', $act, '" class="input_check membergroup_primary" id="', $act, '" name="agreementMembergroups[]" />
 														</div>
-														<div class="floatright" style="width: 94%; margin-top: 2px; text-align: left;">
+														<div class="floatright" style="width: 94%; margin-top: 1px; text-align: left;">
 															<label for="', $act, '">
 																<span', !empty($membergroup['color']) ? ' style="color: ' . $membergroup['color'] . ';"' : '', '">', $membergroup['name'], $txt['lab_plural_form'], '</span>
 															</label>
@@ -288,18 +295,18 @@ function template_user_agreement_update()
 										</div>
 										<div class="floatright" style="width: 50%;" id="postbased_mgroups">
 											<strong>', $txt['lab_post_based'], '</strong>&nbsp;
-											(<span class="fake_link smalltext" id="postbased_mgroups_check">', $txt['lab_check'], '</span>
+											(<a href="#" class="smalltext" id="postbased_mgroups_check">', $txt['lab_check'], '</a>
 											&nbsp;/&nbsp;
-											<span class="fake_link smalltext" id="postbased_mgroups_uncheck">', $txt['lab_uncheck'], '</span>)
+											<a href="#" class="smalltext" id="postbased_mgroups_uncheck">', $txt['lab_uncheck'], '</a>)
 											<hr />';
 											foreach ($membergroups['post_based'] as $act => $membergroup)
 											{
 												echo '
 													<div style="margin-bottom: -9px;">
 														<div class="floatleft" style="width: 6%;">
-															<input type="checkbox" value="', $act, '" class="input_check" id="', $act, '" name="agreementMembergroups[]" />
+															<input type="checkbox" value="', $act, '" class="input_check membergroup_postbased" id="', $act, '" name="agreementMembergroups[]" />
 														</div>
-														<div class="floatright" style="width: 94%; margin-top: 2px; text-align: left;">
+														<div class="floatright" style="width: 94%; margin-top: 1px; text-align: left;">
 															<label for="', $act, '">
 																<span', !empty($membergroup['color']) ? ' style="color: ' . $membergroup['color'] . ';"' : '', '"><em>', $membergroup['name'], $txt['lab_plural_form'], '</em></span>
 															</label>
@@ -351,7 +358,7 @@ function template_user_agreement_update()
 			<input type="hidden" name="agree_lang" value="', $context['current_agreement'], '" />
 			<input type="hidden" name="sa" value="agreement" />
 			<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-			<div class="centertext">
+			<div class="centertext upper_space">
 				<input type="submit" value="', $txt['lab_save_settings'], '" class="button_submit bloated_input" />
 			</div>
 		</form>
@@ -364,6 +371,7 @@ function template_user_agreement_update()
 function template_copyright_above()
 {
 }
+
 function template_copyright_below()
 {
 	// Globals & Copyright

@@ -12,26 +12,59 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-function parseAgreement($content)
+function retrieveAgreement() {
+
+	//-- Globalize what we'll need here...
+	global $boarddir, $txt, $user_info;
+
+	// First, we try for the regular agreement in OUR language.
+	if (file_exists($boarddir . '/agreement.' . $user_info['language'] . '.txt') == true)
+		$path = 'agreement.' . $user_info['language'] . '.txt';
+	// If we can't get the updated agreement in our language, try the DEFAULT agreement in our dialect.
+	else if (file_exists($boarddir . '/default-agreement.' . $user_info['language'] . '.txt') == true)
+		$path = 'default-agreement.' . $user_info['language'] . '.txt';
+	// Otherwise, we'll have to go back to plain old English (updated).
+	else if (file_exists($boarddir . '/agreement.txt') == true)
+		$path = 'agreement.txt';
+	// Wow, this is our LAST resort.
+	else if (file_exists($boarddir . '/default-agreement.txt') == true)
+		$path = 'default-agreement.txt';
+	// Oh well. We did everything we could.
+	else
+		fatal_error($txt['invalid_language_file'], true);
+
+	//-- Go get the agreement we defined above, assuming fatal_error() didn't stop them first.
+	$content = file_get_contents($boarddir . '/' . $path);
+
+	// And send it away.
+	return $content;
+
+}
+
+function parseAgreement()
 {
 
 	// Globalize what we need.
 	global $modSettings;
 
+	//-- Get our agreement so that we can parse it.
+	$content = retrieveAgreement();
+
 	// No BBC? At least fix our line-breaks.
 	if (empty($modSettings['agreementBBC']))
-		return $content = str_replace("\n", '<br />', $content);
+		$content = str_replace("\n", '<br />', $content);
 	// If we are parsing BBC, Smileys or not?
 	else
-		return $content = parse_bbc($content, !empty($modSettings['agreementSmileys']) ? true : false, '');
+		$content = parse_bbc($content, !empty($modSettings['agreementSmileys']) ? true : false, '');
 
+	return $content;
 }
 
 function userAgreementAddLanguage()
 {
 
 	// Globalize stuffff.
-	global $context, $boarddir, $sourcedir;
+	global $context, $boarddir;
 
 	// Clear the cache, prior to getting the languages.
 	clean_cache();
@@ -40,7 +73,7 @@ function userAgreementAddLanguage()
 	getLanguages();
 
 	// A simple loop, of languages.
-	foreach ($context['languages'] as $key => $language)
+	foreach ($context['languages'] as $language)
 	{
 		// If the agreement file exists for the language, and a default doesn't, we shall create one based on the default.
 		if (file_exists($boarddir . '/agreement.' . $language['filename'] . '.txt') == true && file_exists($boarddir . '/default-agreement.' . $language['filename'] . '.txt') == false)
