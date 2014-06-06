@@ -1,0 +1,54 @@
+/**
+ * User Agreement Update
+ *
+ * @file handler.css
+ * @author Labradoodle-360
+ * @copyright 2011 Matthew Kerle - All Rights Reserved
+ *
+ * @version 1.0.3
+ */
+
+.spacer {
+	margin-bottom: 8px;
+}
+.upper_space {
+	margin-top: 8px;
+}
+.bold {
+	font-weight: bold;
+}
+.rfix {
+	margin-top: -2px;
+}
+.tinytext {
+	font-size: xx-small;
+}
+.hidden {
+	display: none;
+}
+.rounded {
+	padding: 6px;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+}
+.fake_link {
+	color: #346;
+	text-decoration: none;
+}
+.fake_link:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+.custom_select {
+	padding: 4px;
+	min-width: 40px;
+}
+.bloated_input {
+	padding: 6px;
+}
+.lab_icon_medium {
+	width: 24px;
+	margin-right: 4px;
+	margin-top: 2px;
+}

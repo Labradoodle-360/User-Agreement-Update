@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	Package manifest file for User Agreement Update 1.0.3
+
+	ATTENTION: If you are trying to install this manually, you should try
+	the package manager.  If it will not work for you, please take a look
+	at the following for information on this format:
+		http://mods.simplemachines.org/docs/manual-install.php
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<name>User Agreement Update</name>
+	<id>Labradoodle-360:user-agreement-update</id>
+	<version>1.0.3</version>
+	<type>modification</type>
+	<!-- !! INSTALLS !! -->
+	<install for="2.0 - 2.0.99">
+		<readme parsebbc="true">readme.txt</readme>
+		<modification>modifications.xml</modification>
+		<!-- Require File: default-agreement.txt -->
+		<require-file name="/resources/default-agreement.txt" destination="$boarddir" />
+		<!-- Require Dir: uau_source -->
+		<require-dir name="/resources/uau_source" destination="$sourcedir" />
+		<!-- Require Dir: uau_template -->
+		<require-dir name="/resources/uau_template" destination="$themedir" />
+		<!-- Require Dir: uau_language -->
+		<require-dir name="/resources/uau_language" destination="$languagedir" />
+		<!-- Require Dir: uau_css -->
+		<require-dir name="/resources/uau_css" destination="$themedir/css" />
+		<!-- Require Dir: uau_images -->
+		<require-dir name="/resources/uau_images" destination="$imagesdir" />
+		<!-- Database Changes: uau_database.php -->
+		<database>uau_database.php</database>
+		<!-- Redirect To: ?action=admin;area=regcenter;sa=agreement -->
+		<redirect url="?action=admin;area=regcenter;sa=agreement" />
+	</install>
+	<!-- !! UNINSTALLS !! -->
+	<uninstall for="2.0 - 2.0.99">
+		<readme parsebbc="true">readme.txt</readme>
+		<modification reverse="true">modifications.xml</modification>
+		<!-- Remove Dir: uau_source -->
+		<remove-dir name="$sourcedir/uau_source" />
+		<!-- Remove Dir: uau_template -->
+		<remove-dir name="$themedir/uau_template" />
+		<!-- Remove Dir: uau_language -->
+		<remove-dir name="$languagedir/uau_language" />
+		<!-- Remove Dir: uau_css -->
+		<remove-dir name="$themedir/css/uau_css" />
+		<!-- Remove Dir: uau_images -->
+		<remove-dir name="$imagesdir/uau_images" />
+		<!-- Database Changes: uau_remove_database.php -->
+		<database>uau_remove_database.php</database>
+		<!-- Redirect To: ?action=admin;area=packages;sa=browse -->
+		<redirect url="?action=admin;area=packages;sa=browse" />
+	</uninstall>
+</package-info>

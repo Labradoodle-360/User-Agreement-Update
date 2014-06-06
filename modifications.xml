@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>Labradoodle-360:user-agreement-update</id>
+	<version>1.0.3</version>
+	<file name="$boarddir/index.php">
+		<operation>
+			<search position="after"><![CDATA[
+	elseif (empty($_REQUEST['action']))
+]]></search>
+			<add><![CDATA[
+	//-- Labradoodle-360; User Agreement Update
+	elseif (!$user_info['is_guest'] && $user_info['has_agreed'] == false && $modSettings['userAgreementUpdateMode'] == 'strict' && (!isset($_REQUEST['action']) || isset($_REQUEST['action']) && $_REQUEST['action'] != 'logout'))
+	{
+		if (!empty($_REQUEST['action']) && $_REQUEST['action'] == 'login2')
+			redirectexit();
+		require_once($sourcedir . '/uau_source/Handler.php');
+		return 'HandlerFunc';
+	}
+	// End Labradoodle-360; User Agreement Update --//
+]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+	// Otherwise, it was set - so let's go to that action.
+]]></search>
+			<add><![CDATA[
+	//-- Labradoodle-360; User Agreement Update
+	if (!$user_info['is_guest'] && $user_info['has_agreed'] == false && $modSettings['userAgreementUpdateMode'] == 'relaxed' && isset($_REQUEST['action']) && $_REQUEST['action'] != 'logout')
+	{
+		if (!empty($_REQUEST['action']) && $_REQUEST['action'] == 'login2')
+			redirectexit();
+		require_once($sourcedir . '/uau_source/Handler.php');
+		return 'HandlerFunc';
+	}
+	// End Labradoodle-360; User Agreement Update --//
+]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/Load.php">
+		<operation>
+			<search position="after"><![CDATA[
+	$user_info['groups'] = array_unique($user_info['groups']);
+]]></search>
+			<add><![CDATA[
+	//-- Labradoodle-360; User Agreement Update
+	$user_info += array(
+		'has_agreed' => !empty($user_settings['has_agreed']) ? true : false,
+		'gender' => isset($user_settings['gender']) ? $user_settings['gender'] : 0
+	);
+	// End Labradoodle-360; User Agreement Update --//
+]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/ManageRegistration.php">
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+		- allows assigning a primary group to the member being registered.
+
+	void EditAgreement()
+		- allows the administrator to edit the registration agreement, and
+		  choose whether it should be shown or not.
+		- accessed by ?action=admin;area=regcenter;sa=agreement.
+		- uses the Admin template and the edit_agreement sub template.
+		- requires the admin_forum permission.
+		- uses the edit_agreement administration area.
+		- writes and saves the agreement to the agreement.txt file.
+]]></search>
+			<add><![CDATA[
+		- allows assigning a primary group to the member being registered.
+]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+	// Work out which to call...
+]]></search>
+			<add><![CDATA[
+	//-- Labradoodle-360; User Agreement Update
+	// Not so fast...we'll sneak in here, thanks ;)
+	unset($subActions['agreement']);
+	global $sourcedir;
+	require_once($sourcedir . '/uau_source/Handler.php');
+	$subActions += array(
+		'agreement' => array('userAgreementUpdate', 'admin_forum')
+	);
+	// End Labradoodle-360; User Agreement Update --//
+]]></add>
+		</operation>
+	</file>
+	<file name="$sourcedir/ManageServer.php">
+		<operation>
+			<search position="after"><![CDATA[
+			$context['install_complete'] = sprintf($txt['languages_download_complete_desc'], $scripturl . '?action=admin;area=languages');
+]]></search>
+			<add><![CDATA[
+			//-- Labradoodle-360; User Agreement Update
+			require_once($sourcedir . '/uau_source/Subs-Handler.php');
+			userAgreementAddLanguage();
+			// End Labradoodle-360; User Agreement Update --//
+]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+		// Fourth, a related images folder?
+]]></search>
+			<add><![CDATA[
+		//-- Labradoodle-360; User Agreement Update
+		// Three...and a half ;)
+		require_once($sourcedir . '/uau_source/Subs-Handler.php');
+		userAgreementDeleteLanguage($context['lang_id']);
+		// End Labradoodle-360; User Agreement Update --//
+]]></add>
+		</operation>
+	</file>
+	<file name="$themedir/scripts/suggest.js">
+		<operation error="skip">
+			<search position="replace"><![CDATA[
+	this.sItemTemplate = 'sItemTemplate' in this.opt ? this.opt.sItemTemplate : '<input type="hidden" name="%post_name%[]" value="%item_id%" /><a href="%item_href%" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">%item_name%</a>&nbsp;<img src="%images_url%/pm_recipient_delete.gif" alt="%delete_text%" title="%delete_text%" onclick="return %self%.deleteAddedItem(%item_id%);" />';
+]]></search>
+			<add><![CDATA[
+	this.sItemTemplate = 'sItemTemplate' in this.opt ? this.opt.sItemTemplate : '<input type="hidden" name="%post_name%[]" value="%item_id%" /><a href="%item_href%" class="extern" onclick="window.open(this.href, \'_blank\'); return false;">%item_name%</a>&nbsp;<img src="%images_url%/uau_images/cross-small.png" style="cursor: pointer;" alt="%delete_text%" title="%delete_text%" onclick="return %self%.deleteAddedItem(%item_id%);" />';
+]]></add>
+		</operation>
+	</file>
+</modification>
