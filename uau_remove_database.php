@@ -4,9 +4,9 @@
  *
  * @file uau_remove_database.php
  * @author Labradoodle-360
- * @copyright 2011 Matthew Kerle - All Rights Reserved
+ * @copyright Matthew Kerle 2012 - 2014
  *
- * @version 1.0.3
+ * @version 1.0.4
  */
  
 // Using SSI?
@@ -24,11 +24,12 @@ global $smcFunc, $context, $boarddir;
 
 // Remove our settings.
 $variables = array(
-	'agreementBBC',
-	'agreementSmileys',
-	'requireReagreement',
-	'userAgreementUpdateMode',
-	'lastUpdatedUA',
+	'uau_agreementBBC',
+	'uau_agreementSmileys',
+	'uau_requireReagreement',
+	'uau_userAgreementUpdateMode',
+	'uau_lastUpdatedUA',
+	'uau_lastUpdatedUA',
 );
 foreach ($variables as $value)
 {

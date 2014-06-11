@@ -4,9 +4,9 @@
  *
  * @file Subs-Handler.php
  * @author Labradoodle-360
- * @copyright Matthew Kerle 2012
+ * @copyright Matthew Kerle 2012 - 2014
  *
- * @version 1.0.3
+ * @version 1.0.4
  */
 
 if (!defined('SMF'))
@@ -51,13 +51,14 @@ function parseAgreement()
 	$content = retrieveAgreement();
 
 	// No BBC? At least fix our line-breaks.
-	if (empty($modSettings['agreementBBC']))
+	if (empty($modSettings['uau_agreementBBC']))
 		$content = str_replace("\n", '<br />', $content);
 	// If we are parsing BBC, Smileys or not?
 	else
-		$content = parse_bbc($content, !empty($modSettings['agreementSmileys']) ? true : false, '');
+		$content = parse_bbc($content, !empty($modSettings['uau_agreementSmileys']) ? true : false, '');
 
 	return $content;
+
 }
 
 function userAgreementAddLanguage()

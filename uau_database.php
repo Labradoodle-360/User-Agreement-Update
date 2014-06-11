@@ -4,9 +4,9 @@
  *
  * @file uau_database.php
  * @author Labradoodle-360
- * @copyright 2011 Matthew Kerle - All Rights Reserved
+ * @copyright Matthew Kerle 2012 - 2014
  *
- * @version 1.0.3
+ * @version 1.0.4
  */
  
 // Using SSI?
@@ -24,11 +24,11 @@ global $smcFunc, $context, $boarddir;
 
 // Insert our settings.
 $variables = array(
-	'agreementBBC' => '0',
-	'agreementSmileys' => '0',
-	'requireReagreement' => '0',
-	'userAgreementUpdateMode' => 'strict',
-	'lastUpdatedUA' => '',
+	'uau_agreementBBC' => '0',
+	'uau_agreementSmileys' => '0',
+	'uau_requireReagreement' => '0',
+	'uau_userAgreementUpdateMode' => 'strict',
+	'uau_lastUpdatedUA' => '',
 );
 updateSettings($variables, false, false);
 

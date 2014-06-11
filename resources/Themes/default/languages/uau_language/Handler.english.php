@@ -4,13 +4,14 @@
  *
  * @file Handler.english.php
  * @author Labradoodle-360
- * @copyright Matthew Kerle 2012
+ * @copyright Matthew Kerle 2012-2014
  *
  * @version 1.0.4
  */
 
 $txt['uau_reg_mem'] = 'Regular Member';
 $txt['updated_agreement_notice'] = 'You are seeing this page because the registration agreement has been updated and you are being required to re-accept the agreement.';
+$txt['updated_agreement_notice_main'] = 'You are seeing this notification because the registration agreement has been updated and you are being required to re-accept the agreement. Please click <a href="%1$s">here</a> to review the updated user agreement.';
 $txt['updated_user_agreement'] = 'Updated User Agreement';
 $txt['re_accept_agreement'] = 'Re-Accept Agreement';
 $txt['invalid_language_file'] = 'Sorry, no valid language files could not outputted.';
@@ -24,13 +25,15 @@ $txt['lab_read'] = 'read';
 $txt['the_user_agreement'] = 'the User Agreement.';
 $txt['lab_close'] = 'Close';
 $txt['lab_saved_notice'] = 'User Agreement Settings Successfully Saved!';
+$txt['lab_agreement_language'] = 'Agreement Language';
 $txt['lab_languages'] = 'Languages';
 $txt['lab_parse_bbc'] = 'Parse BBC';
 $txt['lab_show_smileys'] = 'Show Smileys';
 $txt['lab_restore_to'] = 'Restore To';
 $txt['lab_latest_revision'] = 'Latest Revision';
 $txt['lab_default_agreement'] = 'Default';
-$txt['lab_addit_settings'] = 'Additional Settings';
+$txt['lab_modify_registration_agreement'] = 'Registration Agreement';
+$txt['lab_addit_settings'] = 'Agreement Settings';
 $txt['lab_setting_show_require'] = 'Show and Require';
 $txt['lab_setting_desc_show_require'] = 'Should users be required to accept the user agreement?';
 $txt['lab_setting_require_reagreement'] = 'Require Re-Agreement';

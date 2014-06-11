@@ -2,7 +2,7 @@
 <!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
 <modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
 	<id>Labradoodle-360:user-agreement-update</id>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<file name="$boarddir/index.php">
 		<operation>
 			<search position="after"><![CDATA[
@@ -43,6 +43,7 @@
 	$user_info['groups'] = array_unique($user_info['groups']);
 ]]></search>
 			<add><![CDATA[
+
 	//-- Labradoodle-360; User Agreement Update
 	$user_info += array(
 		'has_agreed' => !empty($user_settings['has_agreed']) ? true : false,
@@ -51,6 +52,21 @@
 	// End Labradoodle-360; User Agreement Update --//
 ]]></add>
 		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+	// Initialize the theme.
+	loadSubTemplate('init', 'ignore');
+]]></search>
+			<add><![CDATA[
+	//-- Labradoodle-360; User Agreement Update
+	if (!$user_info['is_guest'] && $user_info['has_agreed'] == false && empty($_REQUEST['action'])) {
+		loadLanguage('uau_language/Handler');
+		loadTemplate('uau_template/Handler');
+		$context['template_layers'][] = 'uau_notification';
+	}
+	//-- End Labradoodle-360; User Agreement Update --//
+]]></add>
+        </operation>
 	</file>
 	<file name="$sourcedir/ManageRegistration.php">
 		<operation error="skip">

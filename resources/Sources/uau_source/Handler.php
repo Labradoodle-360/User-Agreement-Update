@@ -4,9 +4,9 @@
  *
  * @file Handler.php
  * @author Labradoodle-360
- * @copyright Matthew Kerle 2012
+ * @copyright Matthew Kerle 2012-2014
  *
- * @version 1.0.3
+ * @version 1.0.4
  */
 
 if (!defined('SMF'))
@@ -22,8 +22,8 @@ function HandlerFunc()
 	require_once($sourcedir . '/uau_source/Subs-Handler.php');
 
 	// Loadss
-	loadTemplate('/uau_template/Handler');
-	loadLanguage('/uau_language/Handler');
+	loadTemplate('uau_template/Handler');
+	loadLanguage('uau_language/Handler');
 
 	// Linktree Item
 	$context['linktree'][] = array(
@@ -35,7 +35,8 @@ function HandlerFunc()
 
 	// Our CSS File & jQuery Implementation
 	$context['html_headers'] .= "\n" . '
-		<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/uau_css/handler.css" />
+		<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/css/uau_css/handler.css" />
+		<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/uau_javascript/handler.js"></script>
 		<script type="text/javascript">
 			//<![CDATA[
 			if (!window.jQuery) {
@@ -45,17 +46,16 @@ function HandlerFunc()
 		</script>
 		<script type="text/javascript">
 			//<![CDATA[
+			var reaccept_agreement = ' . JavaScriptEscape($txt['re_accept_agreement']) . ';
 			jQuery(document).ready(function($) {
-				$("#which_input").removeClass("hidden");
-				$("#has_read").change(function() {
-					if ($(this).val() == 1) {
-						$("#which_input").html(\'<input type="submit" value="' . $txt['re_accept_agreement'] . '" id="submit" name="submit" class="button_submit bloated_input" />\');
-					}
-				});
+				uau_reaccept_agreement($, reaccept_agreement);
 			});
 			//]]>
 		</script>
 	';
+
+	//-- Specify the proper sub-template for use.
+	$context['sub_template'] = 'reaccept';
 
 	// Processing...
 	if (isset($_POST['submit']))
@@ -70,7 +70,7 @@ function HandlerFunc()
 		redirectexit();
 	}
 
-	$agreement = retrieveAgreement();
+	$agreement = parseAgreement();
 
 }
 
@@ -85,8 +85,8 @@ function userAgreementUpdate()
 	require_once($sourcedir . '/uau_source/Subs-Handler.php');
 
 	// Some "loads".
-	loadTemplate('/uau_template/Handler');
-	loadLanguage('/uau_language/Handler');
+	loadTemplate('uau_template/Handler');
+	loadLanguage('uau_language/Handler');
 
 	// Membergroups, cached for your convenience.
 	if (cache_get_data('lab_membergroups', 120) != null)
@@ -107,12 +107,12 @@ function userAgreementUpdate()
 
 	// Safety first.
 	$variables = array(
-		'agreementBBC' => '0',
-		'agreementSmileys' => '0',
+		'uau_agreementBBC' => '0',
+		'uau_agreementSmileys' => '0',
 		'requireAgreement' => '1',
-		'requireReagreement' => '0',
-		'userAgreementUpdateMode' => 'strict',
-		'lastUpdatedUA' => '',
+		'uau_requireReagreement' => '0',
+		'uau_userAgreementUpdateMode' => 'strict',
+		'uau_lastUpdatedUA' => '',
 	);
 	foreach ($variables as $key => $default)
 	{
@@ -127,7 +127,7 @@ function userAgreementUpdate()
 		if (file_exists($boarddir . '/agreement.' . $lang['filename'] . '.txt'))
 		{
 			// Then feed them for template stuff.
-			$context['editable_agreements']['.' . $lang['filename']] = $lang['name'];
+			$context['editable_agreements']['.' . $lang['filename']] =  str_replace('utf8', '(UTF-8)', str_replace('-', ' ', $lang['name']));
 
 			// If you're trying to modify a different language, this is where it's at!
 			if (isset($_POST['agree_lang']) && $_POST['agree_lang'] == '.' . $lang['filename'])
@@ -143,14 +143,9 @@ function userAgreementUpdate()
 	$context['warning'] = is_writable($boarddir . '/agreement' . $context['current_agreement'] . '.txt') ? '' : $txt['agreement_not_writable'];
 
 	// Yes! We are multilingual!
-	if (empty($context['current_agreement']))
+	if (!empty($context['current_agreement']))
 	{
-		// If we only have English, no reason to go farther.
-		$original_agreement = utf8_encode(un_htmlspecialchars($context['original_agreement']));
-		$revision_agreement = utf8_encode(un_htmlspecialchars($context['agreement']));
-	}
-	else
-	{
+
 		// Otherwise, we do have another language, pretty cool. Let's go!
 		if (file_exists($boarddir . '/Themes/default/languages/index' . $context['current_agreement'] . '.php') == true)
 		{
@@ -180,11 +175,20 @@ function userAgreementUpdate()
 		// Some accented characters could cause a problem, this is for jQuery restore to functions.
 		$original_agreement = utf8_encode(htmlentities(un_htmlspecialchars($context['original_agreement'])));
 		$revision_agreement = utf8_encode(htmlentities(un_htmlspecialchars($context['agreement'])));
+
+	}
+	else
+	{
+		// If we only have English, no reason to go farther.
+		$original_agreement = utf8_encode(un_htmlspecialchars($context['original_agreement']));
+		$revision_agreement = utf8_encode(un_htmlspecialchars($context['agreement']));
 	}
 
 	// Our CSS file, jQuery include, and some jQuery.
 	$context['html_headers'] .= "\n" . '
-		<link rel="stylesheet" type="text/css" href="' . $settings['theme_url'] . '/css/uau_css/handler.css" />
+		<link rel="stylesheet" type="text/css" href="' . $settings['default_theme_url'] . '/css/uau_css/handler.css" />
+		<script type="text/javascript" src="' . $settings['default_theme_url'] . '/scripts/uau_javascript/handler.js"></script>
+		<meta http-equiv="Content-Type" content="text/html;charset=' . $context['character_set'] . '">
 		<script type="text/javascript">
 			//<![CDATA[
 			if (!window.jQuery) {
@@ -195,113 +199,15 @@ function userAgreementUpdate()
 			//]]>
 		</script>
 		<style type="text/css">
-			.auto_suggest_div {
-				border: 1px solid #ccc;
-				position: absolute;
-				visibility: hidden;
-			}
-			.auto_suggest_item {
-				padding: 6px;
-				background: #fff;
-				border-bottom: 1px solid #ccc;
-			}
-			.auto_suggest_item_hover {
-				padding: 6px;
-				background: #e8e8e8;
-				cursor: pointer;
-				color: #4c4c4c;
-				border-bottom: 1px solid #ccc;
-			}
 		</style>
 		<script type="text/javascript">
 			//<![CDATA[
+				var confirm_latest    = ' . JavaScriptEscape(sprintf($txt['restore_jquery'], $txt['restore_opt_latest'])) . ';
+				var latest_agreement  = ' . JavaScriptEscape(html_entity_decode($revision_agreement)) . ';
+				var confirm_default   = ' . JavaScriptEscape(sprintf($txt['restore_jquery'], $txt['restore_opt_default'])) . ';
+				var default_agreement = ' . JavaScriptEscape(html_entity_decode($original_agreement)) . ';
 				jQuery(document).ready(function($) {
-
-					$("#restore_original").click(function() {
-						if (confirm("' . sprintf($txt['restore_jquery'], $txt['restore_opt_default']) . '")) {
-							$("#agreement").val(' . JavaScriptEscape(html_entity_decode($original_agreement)) . ');
-						}
-					});
-
-					$("#restore_latest_rev").click(function() {
-						if (confirm("' . sprintf($txt['restore_jquery'], $txt['restore_opt_latest']) . '")) {
-							$("#agreement").val(' . JavaScriptEscape(html_entity_decode($revision_agreement)) . ');
-						}
-					});
-
-					// If the registration agreement isn\'t required, don\'t show anything else.
-					var require_agreement = $("#requireAgreement").attr("checked");
-					if (require_agreement != "checked") {
-						$("#required_mode_only").slideUp("slow");
-					}
-					$("#requireAgreement").change(function() {
-						var current_value = $(this).attr("checked");
-						if (current_value == "checked") {
-							$("#required_mode_only").slideDown("fast");
-						}
-						else {
-							$("#required_mode_only").slideUp("fast");
-						}
-					});
-
-					// If we don\'t require members to update, no point in the next two settings.
-					if ($("#requireReagreement").is(":checked")) {
-						$("#member_dependent").slideDown("slow");
-					}
-					$("#requireReagreement").change(function() {
-						if ($(this).is(":checked")) {
-							$("#member_dependent").slideDown("slow");
-						}
-						else {
-							$("#member_dependent").slideUp("slow");
-						}
-					});
-
-					// Direct Agreement Options
-					if ($("#agreementBBC").is(":checked")) {
-							$("#left_column").animate({width: \'49%\'}, 3000);
-							$("#right_column").delay(1100).fadeIn("slow").animate({width: \'50%\'}, 2000);
-					}
-					$("#agreementBBC").change(function() {
-						if ($(this).is(":checked")) {
-							$("#left_column").animate({width: \'49%\'}, 3000);
-							$("#right_column").delay(1100).fadeIn("slow").animate({width: \'50%\'}, 2000);
-						}
-						else {
-							$("#right_column").animate({width: \'20%\'}, 2000).delay(100).fadeOut("slow");
-							$("#left_column").animate({width: \'79%\'}, 2000).delay(400).animate({width: \'100%\'}, 2000);
-						}
-					});
-
-					// Check All / Uncheck All
-					$("#primary_mgroups_check").on("click", function(event) {
-						event.preventDefault();
-						$("input.membergroup_primary").prop("checked", "checked");
-					});
-					$("#primary_mgroups_uncheck").on("click", function(event) {
-						event.preventDefault();
-						$("input.membergroup_primary").prop("checked", "");
-					});
-					$("#postbased_mgroups_check").on("click", function(event) {
-						event.preventDefault();
-						$("input.membergroup_postbased").prop("checked", "checked");
-					});
-					$("#postbased_mgroups_uncheck").on("click", function(event) {
-						event.preventDefault();
-						$("input.membergroup_postbased").prop("checked", "");
-					});
-
-					// Membergroups jQuery
-					$("#expand_membergroups").click(function() {
-						$("#membergroups_group").slideDown("slow");
-						$("#collapse_membergroups").removeClass("hidden");
-						$("#expand_membergroups").addClass("hidden");
-					});
-					$("#collapse_membergroups").click(function() {
-						$("#membergroups_group").slideUp("slow");
-						$("#expand_membergroups").removeClass("hidden");
-						$("#collapse_membergroups").addClass("hidden");
-					});
+					uau_admin_scripts($, confirm_latest, latest_agreement, confirm_default, default_agreement);
 				});
 			//]]>
 		</script>
@@ -334,27 +240,27 @@ function userAgreementUpdate()
 		$bypassed_members = array();
 		if (isset($_POST['bypassed_members']))
 		{
-			foreach ($_POST['bypassed_members'] as $key => $value)
+			foreach ($_POST['bypassed_members'] as $member)
 			{
-				$bypassed_members[] = (int) $value;
+				$bypassed_members[] = (int) $member;
 			}
 		}
 
 		// Our post variables to update.
 		$post_vars = array(
-			'agreementBBC' => !empty($_POST['agreementBBC']) ? 1 : 0,
-			'agreementSmileys' => !empty($_POST['agreementSmileys']) ? 1 : 0,
+			'uau_agreementBBC' => !empty($_POST['uau_agreementBBC']) ? 1 : 0,
+			'uau_agreementSmileys' => !empty($_POST['uau_agreementSmileys']) ? 1 : 0,
 			'requireAgreement' => !empty($_POST['requireAgreement']) ? 1 : 0,
-			'requireReagreement' => !empty($_POST['requireReagreement']) ? 1 : 0,
-			'userAgreementUpdateMode' => isset($_POST['userAgreementUpdateMode']) ? $_POST['userAgreementUpdateMode'] : 'strict',
-			'lastUpdatedUA' => !empty($_POST['requireReagreement']) ? time() : '',
+			'uau_requireReagreement' => !empty($_POST['uau_requireReagreement']) ? 1 : 0,
+			'uau_userAgreementUpdateMode' => isset($_POST['uau_userAgreementUpdateMode']) ? $_POST['uau_userAgreementUpdateMode'] : 'strict',
+			'uau_lastUpdatedUA' => !empty($_POST['uau_requireReagreement']) ? time() : '',
 		);
 
 		// Send them through.
 		updateSettings($post_vars);
 
 		// Time to flip the reset switch.
-		if (!empty($_POST['requireReagreement']) && $smcFunc['htmlspecialchars']($_POST['agreement'], ENT_QUOTES) != $context['agreement'])
+		if (!empty($_POST['uau_requireReagreement']) && $smcFunc['htmlspecialchars']($_POST['agreement'], ENT_QUOTES) != $context['agreement'])
 		{
 			if (!empty($primary_membergroups) && count(array_keys($primary_membergroups) == 1))
 				$formatted_primary_groups = array($primary_membergroups[0]);
@@ -401,10 +307,7 @@ function userAgreementUpdate()
 			<script type="text/javascript">
 				//<![CDATA[
 					jQuery(document).ready(function($) {
-						$("#profile_success").delay(500).slideDown("slow");
-						$("#close_success").click(function() {
-							$("#profile_success").delay(500).slideUp("slow");
-						});
+						uau_success_notification($);
 					});
 				//]]>
 			</script>
@@ -412,7 +315,7 @@ function userAgreementUpdate()
 	}
 
 	// When did we last reset, again...?
-	$context['lab_last_reset'] = !empty($modSettings['lastUpdatedUA']) ? timeformat($modSettings['lastUpdatedUA'], true) : '<em>' . $txt['lab_never'] . '</em>';
+	$context['lab_last_reset'] = !empty($modSettings['uau_lastUpdatedUA']) ? timeformat($modSettings['uau_lastUpdatedUA'], true) : '<em>' . $txt['lab_never'] . '</em>';
 
 	// Every once in a while, let's show a donate block.
 	if (mt_rand(0,2) == 1)

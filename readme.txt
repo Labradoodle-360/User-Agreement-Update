@@ -6,7 +6,7 @@ Allowing you to force (all|groups|members) to re-accept the user agreement befor
 
 The interface has a lot of jQuery implemented for the best experience possible, along with CSS3 for some extra styling benefits.
 
-Multilingual support was achieved with some very nice results.
+Multilingual (UTF-8) support was achieved with some very nice results.
 [hr]
 
 [size=13pt][b][color=#404040]Features:[/color][/b][/size]
@@ -59,6 +59,6 @@ Multilingual support was achieved with some very nice results.
 [li]Icon Set: [url=http://p.yusukekamiyamane.com/]Fugue-Icons[/url][/li]
 [li]Written by: Labradoodle-360[/li]
 [li]Copyright: Matthew Kerle - All Rights Reserved[/li]
-[li]Dedicated To: LILM, my family, and Scotty Edward Johnson.[/li]
+[li]Dedicated To: Victoria[/li]
 [/list]
 [hr]

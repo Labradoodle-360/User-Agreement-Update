@@ -4,12 +4,12 @@
  *
  * @file Handler.template.php
  * @author Labradoodle-360
- * @copyright Matthew Kerle 2012
+ * @copyright Matthew Kerle 2012-2014
  *
- * @version 1.0.3
+ * @version 1.0.4
  */
 
-function template_main()
+function template_reaccept()
 {
 
 	// Our Global Variables.
@@ -103,7 +103,7 @@ function template_user_agreement_update()
 	// Let's be encouraging.
 	echo '
 		<div id="profile_success" class="hidden rounded">
-			<span class="floatleft" style="width: 18px; margin-right: 2px; margin-top: 0px;">
+			<span class="floatleft" style="width: 18px; margin-right: 2px; margin-top: -1px;">
 				<img src="', $settings['images_url'], '/uau_images/tick-circle.png" alt="" />
 			</span>
 			', $txt['lab_saved_notice'], '
@@ -118,31 +118,26 @@ function template_user_agreement_update()
 	{
 		echo '
 			<div class="spacer">
-				<div class="cat_bar" style="height: 28px;">
-					<h3 class="catbg" style="text-transform: capitalize;">
+				<div class="cat_bar" style="height: 29px;">
+					<h3 class="catbg">
 						<span class="floatleft lab_icon_medium">
 							<img src="', $settings['images_url'], '/uau_images/globe-green.png" alt="" />
 						</span>
-						', $txt['admin_agreement_select_language'], '
+						', $txt['lab_agreement_language'], '
 					</h3>
 				</div>
 				<div class="windowbg rfix">
-					<div class="content">
+					<div class="content" style="padding-left: 24px;">
 						<form action="', $scripturl, '?action=admin;area=regcenter" id="change_reg" method="post" accept-charset="', $context['character_set'], '">
-							<div class="floatleft" style="width: 28%; margin-left: 2%;">
-								<select name="agree_lang" id="agree_lang" class="custom_select" onchange="document.getElementById(\'change_reg\').submit();">
-									<optgroup label="', $txt['lab_languages'], ':">';
-									foreach ($context['editable_agreements'] as $file => $name)
-									{
-										echo '<option value="', $file, '" ', $context['current_agreement'] == $file ? 'selected="selected"' : '', '>', $name, '</option>';
-									}
-									echo '</optgroup>
-								</select>
-							</div>
-							<div class="floatright" style="width: 70%; text-align: left;">
-								<input type="submit" name="change" value="', $txt['admin_agreement_select_language_change'], '" class="button_submit bloated_input" />
-							</div>
-							<br class="clear" />
+							<select name="agree_lang" id="agree_lang" class="custom_select" onchange="document.getElementById(\'change_reg\').submit();" style="padding-bottom: 5px;">
+								<optgroup label="', $txt['lab_languages'], ':">';
+								foreach ($context['editable_agreements'] as $file => $name)
+								{
+									echo '<option value="', $file, '" ', $context['current_agreement'] == $file ? 'selected="selected"' : '', '>', $name, '</option>';
+								}
+								echo '</optgroup>
+							</select>
+							<input type="submit" name="change" value="', $txt['admin_agreement_select_language_change'], '" class="button_submit bloated_input" />
 							<input type="hidden" name="sa" value="agreement" />
 							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
 						</form>
@@ -161,39 +156,39 @@ function template_user_agreement_update()
 					<span class="floatleft lab_icon_medium">
 						<img src="', $settings['images_url'], '/uau_images/eraser.png" alt="" />
 					</span>
-					', $txt['registration_agreement'], '
+					', $txt['lab_modify_registration_agreement'], '
 				</h3>
 			</div>
 			<div class="roundframe rfix">
 				<div class="inneframe">
 					<div class="content">
-						<div class="floatleft" id="left_column" style="width: 100.7%;">
+						<div class="floatleft" id="left_column" style="width: 49%;">
 							<div class="information">
 								<div class="floatleft" style="width: 112px; margin-top: 3px;">
-									<label for="agreementBBC">
+									<label for="uau_agreementBBC">
 										<strong>', $txt['lab_parse_bbc'], ':</strong>
 									</label>
 								</div>
-								<input type="checkbox" name="agreementBBC" id="agreementBBC"', $modSettings['agreementBBC'] ? ' checked="checked"' : '', ' value="1" class="input_check" />
+								<input type="checkbox" name="uau_agreementBBC" id="uau_agreementBBC"', $modSettings['uau_agreementBBC'] ? ' checked="checked"' : '', ' value="1" class="input_check" />
 							</div>
 						</div>
-						<div class="floatright hidden" id="right_column" style="text-align: left;">
+						<div class="floatright" id="right_column" style="width: 50%; margin-right: -10px; text-align: left;">
 							<div class="information">
 								<div class="floatleft" style="width: 112px; margin-top: 3px;">
-									<label for="agreementSmileys">
+									<label for="uau_agreementSmileys" id="uau_agreementSmileys_label">
 										<strong>', $txt['lab_show_smileys'], ':</strong>
 									</label>
 								</div>
-								<input type="checkbox" name="agreementSmileys" id="agreementSmileys"', $modSettings['agreementSmileys'] ? ' checked="checked"' : '', ' value="1" class="input_check" />
+								<input type="checkbox" name="uau_agreementSmileys" id="uau_agreementSmileys"', $modSettings['uau_agreementSmileys'] ? ' checked="checked"' : '', ' value="1" class="input_check" />
 							</div>
 						</div>
 						<br class="clear" />
 						<textarea rows="20" name="agreement" id="agreement" style="width: 99%; margin-left: 1px; padding: 10px;">', isset($_POST['agreement']) ? $_POST['agreement'] : $context['agreement'], '</textarea>
 						<div class="smalltext centertext">
 							', $txt['lab_restore_to'], ':&nbsp;
-							<span id="restore_latest_rev" class="fake_link">', $txt['lab_latest_revision'], '</span>
+							<a href="#" id="restore_latest_rev">', $txt['lab_latest_revision'], '</a>
 							&nbsp;|&nbsp;
-							<span id="restore_original" class="fake_link">', $txt['lab_default_agreement'], '</span>
+							<a href="#" id="restore_original">', $txt['lab_default_agreement'], '</a>
 						</div>
 					</div>
 				</div>
@@ -223,14 +218,14 @@ function template_user_agreement_update()
 						<div id="required_mode_only">
 							<hr />
 							<div class="floatleft" style="width: 30%;">
-								<label for="requireReagreement">
+								<label for="uau_requireReagreement">
 									<span class="bold">', $txt['lab_setting_require_reagreement'], ':</span>
 								</label>
 								<div class="tinytext">', $txt['lab_setting_desc_require_reagreement'], '</div>
 							</div>
 							<div class="floatright" style="text-align: left; width: 70%;">
-								<div class="floatleft" style="width: 26x;">
-									<input type="checkbox" name="requireReagreement" id="requireReagreement"', $modSettings['requireReagreement'] == true ? ' checked="checked"' : '', ' value="1" class="input_check" />
+								<div class="floatleft" style="width: 26px;">
+									<input type="checkbox" name="uau_requireReagreement" id="uau_requireReagreement"', $modSettings['uau_requireReagreement'] == true ? ' checked="checked"' : '', ' value="1" class="input_check" />
 								</div>
 								<div class="floatleft" style="margin-top: 2px; margin-left: 16px;">
 									<span class="smalltext">', $txt['lab_last_reset'], ': ', $context['lab_last_reset'], '</span>
@@ -241,7 +236,7 @@ function template_user_agreement_update()
 							<div id="member_dependent" class="hidden">
 								<hr />
 								<div class="floatleft" style="width: 30%;">
-									<label for="userAgreementUpdateMode">
+									<label for="uau_userAgreementUpdateMode">
 										<span class="bold">', $txt['lab_setting_member_mode'], ':</span>
 									</label>
 									<div class="tinytext">
@@ -251,10 +246,10 @@ function template_user_agreement_update()
 									</div>
 								</div>
 								<div class="floatright" style="text-align: left; width: 70%;">
-									<select name="userAgreementUpdateMode" id="userAgreementUpdateMode" class="custom_select">
+									<select name="uau_userAgreementUpdateMode" id="uau_userAgreementUpdateMode" class="custom_select">
 										<optgroup label="', $txt['lab_modes'], ':">
-											<option value="strict"', $modSettings['userAgreementUpdateMode'] == 'strict' ? ' selected="selected"' : '', '>', $txt['lab_strict'], '</option>
-											<option value="relaxed"', $modSettings['userAgreementUpdateMode'] == 'relaxed' ? ' selected="selected"' : '', '>', $txt['lab_relaxed'], '</option>
+											<option value="strict"', $modSettings['uau_userAgreementUpdateMode'] == 'strict' ? ' selected="selected"' : '', '>', $txt['lab_strict'], '</option>
+											<option value="relaxed"', $modSettings['uau_userAgreementUpdateMode'] == 'relaxed' ? ' selected="selected"' : '', '>', $txt['lab_relaxed'], '</option>
 										</optgroup>
 									</select>
 								</div>
@@ -265,8 +260,8 @@ function template_user_agreement_update()
 									<div class="tinytext">', $txt['lab_setting_desc_bypass_groups'], '</div>
 								</div>
 								<div class="floatright" style="text-align: left; width: 70%;">
-									<div id="collapse_membergroups" class="hidden fake_link">[', $txt['lab_collapse_mgroups'], ']</div>
-									<div id="expand_membergroups" class="fake_link">[', $txt['lab_expand_mgroups'], ']</div>
+									<a href="#" id="collapse_membergroups" class="hidden">[', $txt['lab_collapse_mgroups'], ']</a>
+									<a href="#" id="expand_membergroups">[', $txt['lab_expand_mgroups'], ']</a>
 									<div id="membergroups_group" class="hidden" style="margin-top: 15px;">
 										<div class="floatleft" style="width: 50%;" id="primary_mgroups">
 											<strong>', $txt['lab_primary'], '</strong>&nbsp;
@@ -368,9 +363,27 @@ function template_user_agreement_update()
 
 }
 
-function template_copyright_above()
+function template_uau_notification_above()
 {
+	//-- We'll need one or two things here...
+	global $txt, $settings, $scripturl;
+
+	//-- UAU Notification
+	echo '
+		<div class="windowbg" style="margin: 6px 0 16px;">
+			<span class="topslice"><span></span></span>
+			<div class="content">
+				<img src="', $settings['images_url'], '/uau_images/exclamation.png" class="floatleft" style="margin-right: 10px;" />
+				<span style="display: inline-block; margin-top: 4px;">', sprintf($txt['updated_agreement_notice_main'], $scripturl . '?action=profile'), '</span>
+			</div>
+			<span class="botslice"><span></span></span>
+		</div>
+	';
 }
+
+function template_uau_notification_below() {}
+
+function template_copyright_above() {}
 
 function template_copyright_below()
 {

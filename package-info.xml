@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	Package manifest file for User Agreement Update 1.0.3
+	Package manifest file for User Agreement Update 1.0.4
 
 	ATTENTION: If you are trying to install this manually, you should try
 	the package manager.  If it will not work for you, please take a look
@@ -12,24 +12,18 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<name>User Agreement Update</name>
 	<id>Labradoodle-360:user-agreement-update</id>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<type>modification</type>
 	<!-- !! INSTALLS !! -->
 	<install for="2.0 - 2.0.99">
 		<readme parsebbc="true">readme.txt</readme>
 		<modification>modifications.xml</modification>
-		<!-- Require File: default-agreement.txt -->
+		<!-- Require File; default-agreement.txt -->
 		<require-file name="/resources/default-agreement.txt" destination="$boarddir" />
-		<!-- Require Dir: uau_source -->
-		<require-dir name="/resources/uau_source" destination="$sourcedir" />
-		<!-- Require Dir: uau_template -->
-		<require-dir name="/resources/uau_template" destination="$themedir" />
-		<!-- Require Dir: uau_language -->
-		<require-dir name="/resources/uau_language" destination="$languagedir" />
-		<!-- Require Dir: uau_css -->
-		<require-dir name="/resources/uau_css" destination="$themedir/css" />
-		<!-- Require Dir: uau_images -->
-		<require-dir name="/resources/uau_images" destination="$imagesdir" />
+		<!-- Require Dir; Sources -->
+		<require-dir name="/resources/Sources" destination="$boarddir" />
+		<!-- Require Dir: Themes -->
+		<require-dir name="/resources/Themes" destination="$boarddir" />
 		<!-- Database Changes: uau_database.php -->
 		<database>uau_database.php</database>
 		<!-- Redirect To: ?action=admin;area=regcenter;sa=agreement -->
@@ -45,6 +39,8 @@
 		<remove-dir name="$themedir/uau_template" />
 		<!-- Remove Dir: uau_language -->
 		<remove-dir name="$languagedir/uau_language" />
+		<!-- Remove Dir: uau_javascript -->
+		<remove-dir name="$themedir/scripts/uau_javascript" />
 		<!-- Remove Dir: uau_css -->
 		<remove-dir name="$themedir/css/uau_css" />
 		<!-- Remove Dir: uau_images -->
